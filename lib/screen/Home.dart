@@ -2,6 +2,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:planerin/helpers/Drawer_Navigation.dart';
+import 'package:planerin/model/Category.dart';
 import 'package:planerin/model/Event.dart';
 import 'package:planerin/services/Uploadservice.dart';
 
@@ -24,53 +25,59 @@ class _Home extends State<Home>{
   TextEditingController _controller4=TextEditingController();
   String _valueChanged3='',_valueToValidate3='',_valueSaved3='';
   String _valueChanged4='',_valueToValidate4='',_valueSaved4='';
+  var category;
   //to create dialog
-  List<Widget> _events=List<Widget>();
+  List<Event> _events=List<Event>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  List<String> cat=List<String>();
 
   @override
   void initState(){
     super.initState();
     getEvents();
+    getCategory();
   }
 
   getEvents() async{
-    _events=List<Widget>();
+    event=new Event();
+    _events=List<Event>();
       var ab=await uploadservice.getEvents();
       ab.forEach((even){
         print(even['id']);
+        event.id=even['id'];
         print(even['event_name']);
+        event.name=even['event_name'];
         print(even['event_desc']);
+        event.desc=even['event_desc'];
+        print(even['event_cat']);
+        event.cat=even['event_cat'];
         print(even['event_date']);
+        event.date=even['event_date'];
         print(even['event_time']);
+        event.time=even['event_time'];
         setState(() {
-          _events.add(FlatButton(
-            child: Card(
-                child: ListTile(
-                  leading: IconButton(icon:Icon(Icons.edit),onPressed: (){
-                  editEvent(context, even['id']);
-                  },),
-                  title: Text(even['event_name'].toString()),
-                  subtitle: Text(even['event_desc'].toString()),
-                  trailing: IconButton(icon:Icon(Icons.delete),onPressed: (){
-                    deleteEvent(context,even['id']);
-                  }),
-                ),
-            ),
-            onPressed: (){
-              showEvent(context, even['id']);
-            },
-          ));
+          _events.add(event);
         });
       });
   }
 
-
+  getCategory() async{
+  var ab=await uploadservice.getCatEvents();
+  ab.forEach((element){
+    setState((){
+      cat.add(element['cat_name'].toString());
+    });
+  });
+  setState(() {
+    category=cat[0];
+  });
+  }
   showEvent(BuildContext context,id ) async{
     var ab= await uploadservice.getEventById(id);
     setState(() {
       t1.text=ab[0]['event_name'] ?? "Event Title";
       t2.text=ab[0]['event_desc'] ?? "Event Description";
+      category=ab[0]['event_cat'] ?? cat[0];
       _controller3.text=ab[0]['event_date'] ?? "Event Date";
       _controller4.text=ab[0]['event_time'] ?? "Event Time";
     });
@@ -81,6 +88,7 @@ class _Home extends State<Home>{
     setState(() {
       t1.text=ab[0]['event_name'] ?? "Event Title";
       t2.text=ab[0]['event_desc'] ?? "Event Description";
+      category=ab[0]['event_cat'] ?? cat[0];
       _controller3.text=ab[0]['event_date'] ?? "Event Date";
       _controller4.text=ab[0]['event_time'] ?? "Event Time";
     });
@@ -92,6 +100,7 @@ class _Home extends State<Home>{
     setState(() {
       t1.text=ab[0]['event_name'] ?? "Event Title";
       t2.text=ab[0]['event_desc'] ?? "Event Description";
+      category=ab[0]['event_cat'] ?? cat[0];
       _controller3.text=ab[0]['event_date'] ?? "Event Date";
       _controller4.text=ab[0]['event_time'] ?? "Event Time";
     });
@@ -126,6 +135,21 @@ class _Home extends State<Home>{
                     labelText: "Event Description",
                     hintText: "Event Description",
                   ),
+                ),
+                DropdownButton<String>(
+                    items: cat.map((String cats) {
+                      return DropdownMenuItem<String>(
+                          value: cats,
+                          child: Text(cats),
+                      );
+                    }
+                    ).toList(),
+                    onChanged: (String catale){
+                      setState(() {
+                        category=catale;
+                      });
+                    },
+                  value: category,
                 ),
                 DateTimePicker(
                   type: DateTimePickerType.date,
@@ -169,6 +193,7 @@ class _Home extends State<Home>{
                 setState((){
                   event.name=t1.text;
                   event.desc=t2.text;
+                  event.cat=category;
                   event.date=_controller3.text;
                   event.time=_controller4.text;
                 });
@@ -176,6 +201,10 @@ class _Home extends State<Home>{
                 //print('Event Desc: ${t2.text}');
                 var result=await uploadservice.saveEvent(event);
                 print(result);
+                t1.clear();
+                t2.clear();
+                _controller3.clear();
+                _controller4.clear();
                 Navigator.of(dialogContext).pop(); // Dismiss alert dialog
                 getEvents();
                 if(result>0){
@@ -222,6 +251,21 @@ class _Home extends State<Home>{
                     hintText: "Event Description",
                   ),
                 ),
+                DropdownButton<String>(
+                  items: cat.map((String cats) {
+                    return DropdownMenuItem<String>(
+                      value: cats,
+                      child: Text(cats),
+                    );
+                  }
+                  ).toList(),
+                  onChanged: (String catale){
+                    setState(() {
+                      category=catale;
+                    });
+                  },
+                  value: category,
+                ),
                 DateTimePicker(
                   type: DateTimePickerType.date,
                   dateMask: 'dd MMM, yyyy',
@@ -266,7 +310,10 @@ class _Home extends State<Home>{
                 //print('Event Desc: ${t2.text}');
                 var result=await uploadservice.deleteEvent(id);
                 print(result);
-                if(result>0){
+                  t1.clear();
+                  t2.clear();
+                  _controller3.clear();
+                  _controller4.clear();
                   Navigator.of(dialogContext).pop();
                   getEvents();
                   if(result>0){
@@ -274,7 +321,6 @@ class _Home extends State<Home>{
                   }else{
                     showSnackBar(Text("Delete UnSuccessful"));// Dismiss alert dialog
                   }
-                }
               },
             ),
             FlatButton(
@@ -312,6 +358,21 @@ class _Home extends State<Home>{
                     labelText: "Event Description",
                     hintText: "Event Description",
                   ),
+                ),
+                DropdownButton<String>(
+                  items: cat.map((String cats) {
+                    return DropdownMenuItem<String>(
+                      value: cats,
+                      child: Text(cats),
+                    );
+                  }
+                  ).toList(),
+                  onChanged: (String catale){
+                    setState(() {
+                      category=catale;
+                    });
+                  },
+                  value: category,
                 ),
                 DateTimePicker(
                   type: DateTimePickerType.date,
@@ -356,23 +417,24 @@ class _Home extends State<Home>{
                   event.id=id;
                   event.name=t1.text;
                   event.desc=t2.text;
+                  event.cat=category;
                   event.date=_controller3.text;
                   event.time=_controller4.text;
 
                 });
                 var result=await uploadservice.updateEvent(event);
-                if(result>0){
-                  Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+                  t1.clear();
+                  t2.clear();
+                  _controller3.clear();
+                  _controller4.clear();
+                getEvents();
+                Navigator.of(dialogContext).pop(); // Dismiss alert dialog
                   print(result);
-                  getEvents();
                   if(result>0){
                     showSnackBar(Text("Update Success"));
                   }else{
                     showSnackBar(Text("Update UnSuccess"));
                   }
-                }
-                //print('Event Name: ${t1.text}');
-                //print('Event Desc: ${t2.text}');
               },
             ),
             FlatButton(
@@ -402,6 +464,8 @@ class _Home extends State<Home>{
                 Text(t1.text),
                 Text("Event Description",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,height: 3),textAlign: TextAlign.start,),
                 Text(t2.text),
+                Text("Event Category",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,height: 3),textAlign: TextAlign.start,),
+                Text(category),
                 Text("Event Date",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,height: 3),textAlign: TextAlign.start,),
                 Text(_controller3.text),
                 Text("Event Time",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,height: 3),textAlign: TextAlign.start,),
@@ -422,6 +486,55 @@ class _Home extends State<Home>{
     );
   }
 
+  _decisiondialog(BuildContext context,id){
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      // false = user must tap button, true = tap outside dialog
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('Decide Operation'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Text("Which of the following operation do you wish to perform?"),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Show'),
+              onPressed: (){
+                Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+                showEvent(context, id);
+              },
+            ),
+            FlatButton(
+              child: Text('Update'),
+              onPressed: (){
+                Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+                editEvent(context, id);
+                },
+            ),
+            FlatButton(
+              child: Text('Delete'),
+              onPressed: (){
+                Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+                deleteEvent(context, id);
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -431,9 +544,33 @@ class _Home extends State<Home>{
        title: Text("Planerin"),
     ),
     drawer: Drawer_Navigation(),
-     body: Column(
-       children: _events,
-     ),
+     body: ListView.builder(
+         itemCount: _events.length,
+         itemBuilder: (context, index) {
+           return Padding(
+             padding: EdgeInsets.only(top:8.0, left: 8.0, right: 8.0),
+             child: FlatButton(
+               child: Card(
+                   elevation: 8,
+                   shape: RoundedRectangleBorder(
+                       borderRadius: BorderRadius.circular(0)),
+                   child: ListTile(
+                     title: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: <Widget>[
+                         Text(_events[index].name ?? 'No Name')
+                       ],
+                     ),
+                     subtitle: Text(_events[index].cat ?? 'No Category'),
+                     trailing: Text(_events[index].date ?? 'No Date'),
+                   )),
+               onPressed: (){
+                  _decisiondialog(context, _events[index].id);
+               },
+             ),
+           );
+         }
+         ),
 
      floatingActionButton: FloatingActionButton(
        onPressed: (){

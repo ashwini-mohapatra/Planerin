@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:planerin/screen/AboutUs.dart';
+import 'package:planerin/screen/Categories.dart';
 import 'package:planerin/screen/ContactUs.dart';
 import 'package:planerin/screen/Home.dart';
 import 'package:planerin/screen/Profile.dart';
-import 'package:planerin/screen/calendar.dart';
 
 class Drawer_Navigation extends StatefulWidget{
   @override
@@ -42,14 +42,14 @@ class _Drawer_Navigation extends State<Drawer_Navigation>{
               title: Text("Home"),
               leading: Icon(Icons.home),
               onTap: (){
-                Navigator.of(context).push(new MaterialPageRoute(builder: (context)=> Calendar()));
+                Navigator.of(context).push(new MaterialPageRoute(builder: (context)=> Home()));
               },
             ),
             ListTile(
-              title: Text("Events List"),
-              leading: Icon(Icons.home),
+              title: Text("Event Categories"),
+              leading: Icon(Icons.category),
               onTap: (){
-                Navigator.of(context).push(new MaterialPageRoute(builder: (context)=> Home()));
+                Navigator.of(context).push(new MaterialPageRoute(builder: (context)=> Categories()));
               },
             ),
             ListTile(
