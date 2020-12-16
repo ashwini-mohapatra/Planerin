@@ -25,7 +25,7 @@ class _Home extends State<Home>{
   TextEditingController _controller4=TextEditingController();
   String _valueChanged3='',_valueToValidate3='',_valueSaved3='';
   String _valueChanged4='',_valueToValidate4='',_valueSaved4='';
-  var category;
+  var category='Category';
   //to create dialog
   List<Widget> _events=List<Widget>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -35,6 +35,7 @@ class _Home extends State<Home>{
   void initState(){
     super.initState();
     getEvents();
+    cat.add(category);
     getCategory();
   }
 

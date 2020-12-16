@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 import 'package:planerin/screen/Home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:walkthrough/flutterwalkthrough.dart';
-import 'package:walkthrough/walkthrough.dart';
 
 class walkthrough extends StatefulWidget{
   @override
@@ -14,26 +13,26 @@ class walkthrough extends StatefulWidget{
 }
 
 class _walkthrough extends State<walkthrough>{
-  final List<Walkthrough> list = [
-    Walkthrough(
-      title: "Title 1",
-      content: "Content 1",
-      imageIcon: Icons.restaurant_menu,
+  final List<PageViewModel> list = [
+    PageViewModel(
+      image: Image.asset('assets/images/wkl1.jpeg'),
+      title: "Add Events",
+      body: "To add events, click on '+' button at bottom right position of screen.",
     ),
-    Walkthrough(
-      title: "Title 2",
-      content: "Content 2",
-      imageIcon: Icons.search,
+    PageViewModel(
+      image: Image.asset('assets/images/wkl2.jpeg'),
+      title: "Update,Show & Delete Event",
+      body: "To update, show or delete event, simple click on event. It will show a dialog box which can then be used to perform these operations",
     ),
-    Walkthrough(
-      title: "Title 3",
-      content: "Content 3",
-      imageIcon: Icons.shopping_cart,
+    PageViewModel(
+      image: Image.asset('assets/images/wkl3.jpeg'),
+      title: "Add Category",
+      body: "You can also add categories for your events. Go to categories page from side navigation bar to add categories",
     ),
-    Walkthrough(
-      title: "Title 4",
-      content: "Content 4",
-      imageIcon: Icons.verified_user,
+    PageViewModel(
+      image: Image.asset('assets/images/wkl4.jpeg'),
+      title: "Update, Delete Category",
+      body: "To Update/Delete Category, click on the pencil/dustbin icon at front and trailing of category item list.",
     ),
   ];
 
@@ -55,11 +54,23 @@ class _walkthrough extends State<walkthrough>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return IntroScreen(
-      list,
-      MaterialPageRoute(builder: (context) => Home()),
+
+    return Scaffold(
+      body: IntroductionScreen(
+        done: Text("Done",style: TextStyle(color: Colors.purple),),
+        onDone: (){
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => Home()),
+          );
+        },
+        pages: list,
+      ),
     );
-    throw UnimplementedError();
-  }
+    //   return IntroScreen(
+  //     list,
+  //     MaterialPageRoute(builder: (context) => Home()),
+  //   );
+  //   throw UnimplementedError();
+   }
 
 }
