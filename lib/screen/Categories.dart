@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:planerin/helpers/Drawer_Navigation.dart';
 import 'package:planerin/model/Category.dart';
-import 'package:planerin/model/Event.dart';
 import 'package:planerin/services/Uploadservice.dart';
 
 class Categories extends StatefulWidget{
@@ -21,11 +20,6 @@ class _Categories extends State<Categories>{
   Uploadservice uploadservice=Uploadservice();
   TextEditingController t1=TextEditingController();
   TextEditingController t2=TextEditingController();
-  TextEditingController _controller3=TextEditingController();
-  TextEditingController _controller4=TextEditingController();
-  String _valueChanged3='',_valueToValidate3='',_valueSaved3='';
-  String _valueChanged4='',_valueToValidate4='',_valueSaved4='';
-  //to create dialog
   List<Widget> _events=List<Widget>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -39,7 +33,7 @@ class _Categories extends State<Categories>{
     _events=List<Widget>();
     var ab=await uploadservice.getCatEvents();
     ab.forEach((even){
-      print(even['id']);
+      print(even['cat_id']);
       print(even['cat_name']);
       print(even['cat_desc']);
       setState(() {
@@ -47,7 +41,7 @@ class _Categories extends State<Categories>{
           child: Card(
             child: ListTile(
               leading: IconButton(icon:Icon(Icons.edit),onPressed: (){
-                editEvent(context, even['id']);
+                editEvent(context, even['cat_id']);
               },),
               title: Text(even['cat_name'].toString()),
               subtitle: Text(even['cat_desc'].toString()),

@@ -13,6 +13,6 @@ class DatabaseConnection{
 
   _createDatabase(Database db,int version) async{
     await db.execute("CREATE TABLE planerin(id INTEGER PRIMARY KEY, event_name TEXT, event_desc TEXT, event_cat TEXT, event_date TEXT, event_time TEXT)");
-    await db.execute("CREATE TABLE planerin_cat(id INTEGER PRIMARY KEY, cat_name TEXT, cat_desc TEXT)");
+    await db.execute("CREATE TABLE planerin_cat(cat_id INTEGER PRIMARY KEY, cat_name TEXT, cat_desc TEXT)");
   }
 }

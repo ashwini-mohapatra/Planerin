@@ -7,7 +7,7 @@ class Category{
 
   categoryMap(){
     var map=Map<String,dynamic>();
-    map['id']=id;
+    map['cat_id']=id;
     map['cat_name']=name;
     map['cat_desc']=desc;
     return map;

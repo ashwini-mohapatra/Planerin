@@ -10,9 +10,9 @@ class Uploadservice{
     _dbo=db_operations();
   }
   saveEvent(Event event) async{
-    print(event.id);
     print(event.name);
     print(event.desc);
+    print(event.cat);
     print(event.date);
     print(event.time);
     return await _dbo.save('planerin', event.eventMap());
@@ -29,6 +29,7 @@ class Uploadservice{
     print(event.id);
     print(event.name);
     print(event.desc);
+    print(event.cat);
     print(event.date);
     print(event.time);
     return await _dbo.update('planerin', event.eventMap());

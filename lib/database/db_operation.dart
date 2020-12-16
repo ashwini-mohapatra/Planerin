@@ -40,7 +40,6 @@ DatabaseConnection _db;
     var conn=await database;
     return await conn.update(table, data,where: 'id=?',whereArgs: [data['id']]);
   }
-
 saveCat(table,data) async{
   var conn1=await database;
   return await conn1.insert(table, data);
@@ -65,4 +64,5 @@ updateCat(table,data) async{
   var conn1=await database;
   return await conn1.update(table, data,where: 'id=?',whereArgs: [data['id']]);
 }
+
 }

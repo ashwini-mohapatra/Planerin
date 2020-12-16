@@ -27,7 +27,7 @@ class _Home extends State<Home>{
   String _valueChanged4='',_valueToValidate4='',_valueSaved4='';
   var category;
   //to create dialog
-  List<Event> _events=List<Event>();
+  List<Widget> _events=List<Widget>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> cat=List<String>();
 
@@ -40,7 +40,7 @@ class _Home extends State<Home>{
 
   getEvents() async{
     event=new Event();
-    _events=List<Event>();
+    _events=List<Widget>();
       var ab=await uploadservice.getEvents();
       ab.forEach((even){
         print(even['id']);
@@ -56,7 +56,29 @@ class _Home extends State<Home>{
         print(even['event_time']);
         event.time=even['event_time'];
         setState(() {
-          _events.add(event);
+          _events.add(Padding(
+            padding: EdgeInsets.only(top:8.0, left: 8.0, right: 8.0),
+            child: FlatButton(
+              child: Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0)),
+                  child: ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(event.name ?? 'No Name')
+                      ],
+                    ),
+                    subtitle: Text(event.cat ?? 'No Category'),
+                    trailing: Text(event.date ?? 'No Date'),
+                  )),
+              onPressed: (){
+                _decisiondialog(context, event.id);
+              },
+            ),
+          )
+          );
         });
       });
   }
@@ -191,14 +213,13 @@ class _Home extends State<Home>{
               child: Text('Save'),
               onPressed: () async{
                 setState((){
+                  event=new Event();
                   event.name=t1.text;
                   event.desc=t2.text;
                   event.cat=category;
                   event.date=_controller3.text;
                   event.time=_controller4.text;
                 });
-                //print('Event Name: ${t1.text}');
-                //print('Event Desc: ${t2.text}');
                 var result=await uploadservice.saveEvent(event);
                 print(result);
                 t1.clear();
@@ -544,34 +565,9 @@ class _Home extends State<Home>{
        title: Text("Planerin"),
     ),
     drawer: Drawer_Navigation(),
-     body: ListView.builder(
-         itemCount: _events.length,
-         itemBuilder: (context, index) {
-           return Padding(
-             padding: EdgeInsets.only(top:8.0, left: 8.0, right: 8.0),
-             child: FlatButton(
-               child: Card(
-                   elevation: 8,
-                   shape: RoundedRectangleBorder(
-                       borderRadius: BorderRadius.circular(0)),
-                   child: ListTile(
-                     title: Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: <Widget>[
-                         Text(_events[index].name ?? 'No Name')
-                       ],
-                     ),
-                     subtitle: Text(_events[index].cat ?? 'No Category'),
-                     trailing: Text(_events[index].date ?? 'No Date'),
-                   )),
-               onPressed: (){
-                  _decisiondialog(context, _events[index].id);
-               },
-             ),
-           );
-         }
-         ),
-
+     body: Column(
+       children: _events,
+     ),
      floatingActionButton: FloatingActionButton(
        onPressed: (){
         _insertdialog(context);
