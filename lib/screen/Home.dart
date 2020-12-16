@@ -219,6 +219,11 @@ class _Home extends State<Home>{
                   event.cat=category;
                   event.date=_controller3.text;
                   event.time=_controller4.text;
+                  t1.clear();
+                  t2.clear();
+                  category=cat[0];
+                  _controller3.clear();
+                  _controller4.clear();
                 });
                 var result=await uploadservice.saveEvent(event);
                 print(result);
@@ -333,6 +338,7 @@ class _Home extends State<Home>{
                 print(result);
                   t1.clear();
                   t2.clear();
+                  category=cat[0];
                   _controller3.clear();
                   _controller4.clear();
                   Navigator.of(dialogContext).pop();
@@ -435,19 +441,26 @@ class _Home extends State<Home>{
               child: Text('Update'),
               onPressed: () async{
                 setState(() {
+                  event=new Event();
                   event.id=id;
                   event.name=t1.text;
                   event.desc=t2.text;
                   event.cat=category;
                   event.date=_controller3.text;
                   event.time=_controller4.text;
+                  t1.clear();
+                  t2.clear();
+                  category=cat[0];
+                  _controller3.clear();
+                  _controller4.clear();
 
                 });
                 var result=await uploadservice.updateEvent(event);
                   t1.clear();
                   t2.clear();
-                  _controller3.clear();
-                  _controller4.clear();
+                category=cat[0];
+                _controller3.clear();
+                _controller4.clear();
                 getEvents();
                 Navigator.of(dialogContext).pop(); // Dismiss alert dialog
                   print(result);

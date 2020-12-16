@@ -46,12 +46,12 @@ class _Categories extends State<Categories>{
               title: Text(even['cat_name'].toString()),
               subtitle: Text(even['cat_desc'].toString()),
               trailing: IconButton(icon:Icon(Icons.delete),onPressed: (){
-                deleteEvent(context,even['id']);
+                deleteEvent(context,even['cat_id']);
               }),
             ),
           ),
           onPressed: (){
-            showEvent(context, even['id']);
+            showEvent(context, even['cat_id']);
           },
         ));
       });
@@ -122,15 +122,16 @@ class _Categories extends State<Categories>{
               child: Text('Save'),
               onPressed: () async{
                 setState((){
+                  event=new Category();
                   event.name=t1.text;
                   event.desc=t2.text;
+                  t1.clear();
+                  t2.clear();
                 });
                 //print('Event Name: ${t1.text}');
                 //print('Event Desc: ${t2.text}');
                 var result=await uploadservice.saveCatEvent(event);
                 print(result);
-                t1.clear();
-                t2.clear();
                 Navigator.of(dialogContext).pop(); // Dismiss alert dialog
                 getEvents();
                 if(result>0){
@@ -241,9 +242,13 @@ class _Categories extends State<Categories>{
               child: Text('Update'),
               onPressed: () async{
                 setState(() {
+                  event=new Category();
                   event.id=id;
                   event.name=t1.text;
                   event.desc=t2.text;
+                  t1.clear();
+                  t2.clear();
+
                 });
                 var result=await uploadservice.updateCatEvent(event);
                 t1.clear();

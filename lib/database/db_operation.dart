@@ -52,17 +52,17 @@ getallCat(table) async{
 
 deleteCat(table,id) async{
   var conn1=await database;
-  return await conn1.delete(table,where: 'id=?',whereArgs: [id]);
+  return await conn1.delete(table,where: 'cat_id=?',whereArgs: [id]);
 }
 
 getByIdCat(table, id) async{
   var conn1=await database;
-  return await conn1.query(table, where: 'id=?',whereArgs: [id]);
+  return await conn1.query(table, where: 'cat_id=?',whereArgs: [id]);
 }
 
 updateCat(table,data) async{
   var conn1=await database;
-  return await conn1.update(table, data,where: 'id=?',whereArgs: [data['id']]);
+  return await conn1.update(table, data,where: 'cat_id=?',whereArgs: [data['cat_id']]);
 }
 
 }
