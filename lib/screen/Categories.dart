@@ -29,6 +29,21 @@ class _Categories extends State<Categories>{
     getEvents();
   }
 
+  @override
+  void didUpdateWidget(Categories oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
   getEvents() async{
     _events=List<Widget>();
     var ab=await uploadservice.getCatEvents();
@@ -305,25 +320,39 @@ class _Categories extends State<Categories>{
       },
     );
   }
+  Future<Null> refreshEvents()async{
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      getEvents();
+    });
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text("Planerin - Category List"),
-      ),
-      drawer: Drawer_Navigation(),
-      body: Column(
-        children: _events,
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          _insertdialog(context);
-        },
-        child: Icon(Icons.add),
+    return SafeArea(
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text("Category List"),
+        ),
+        drawer: Drawer_Navigation(),
+        body: RefreshIndicator(
+          child: Stack(
+            children: <Widget>[ListView(),Column(
+              children: _events ?? Center(child: Text("No Categories Added Yet",textAlign: TextAlign.center,style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold),),),
+            ),
+            ],
+          ),
+          onRefresh: refreshEvents,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            _insertdialog(context);
+          },
+          child: Icon(Icons.add),
+        ),
       ),
     );
     throw UnimplementedError();

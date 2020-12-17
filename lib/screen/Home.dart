@@ -31,12 +31,30 @@ class _Home extends State<Home>{
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> cat=List<String>();
 
+
+
   @override
   void initState(){
     super.initState();
     getEvents();
     cat.add(category);
     getCategory();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(Home oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   getEvents() async{
@@ -345,6 +363,7 @@ class _Home extends State<Home>{
                   Navigator.of(dialogContext).pop();
                   getEvents();
                   if(result>0){
+                    getEvents();
                     showSnackBar(Text('Delete Successful'));
                   }else{
                     showSnackBar(Text("Delete UnSuccessful"));// Dismiss alert dialog
@@ -569,24 +588,39 @@ class _Home extends State<Home>{
       },
     );
   }
+  Future<Null> refreshEvents()async{
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      getEvents();
+    });
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-   return Scaffold(
-     key: _scaffoldKey,
-       appBar: AppBar(
-       title: Text("Planerin"),
-    ),
-    drawer: Drawer_Navigation(),
-     body: Column(
-       children: _events,
-     ),
-     floatingActionButton: FloatingActionButton(
-       onPressed: (){
-        _insertdialog(context);
-       },
-       child: Icon(Icons.add),
+   return SafeArea(
+     child: Scaffold(
+       key: _scaffoldKey,
+         appBar: AppBar(
+         title: Text("Planerin"),
+      ),
+      drawer: Drawer_Navigation(),
+       body: RefreshIndicator(
+         child: Stack(
+             children: <Widget>[ListView(),Column(
+               children: _events ?? Center(child: Text("No Events Yet",textAlign: TextAlign.center,style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold),),),
+             ),
+             ],
+         ),
+         onRefresh: refreshEvents,
+       ),
+       floatingActionButton: FloatingActionButton(
+         onPressed: (){
+          _insertdialog(context);
+         },
+         child: Icon(Icons.add),
+       ),
      ),
    );
     throw UnimplementedError();
