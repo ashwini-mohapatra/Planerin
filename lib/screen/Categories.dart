@@ -341,7 +341,7 @@ class _Categories extends State<Categories>{
         body: RefreshIndicator(
           child: Stack(
             children: <Widget>[ListView(),Column(
-              children: _events ?? Center(child: Text("No Categories Added Yet",textAlign: TextAlign.center,style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold),),),
+              children: _events ?? Text("No Categories Added Yet",textAlign: TextAlign.center,style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold),),
             ),
             ],
           ),
