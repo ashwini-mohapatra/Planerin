@@ -2,6 +2,11 @@
 
 A todo app
 
+This is a Todo app which can be used to store your list of events in your phone. 
+You can also store events category wise by creating user-defined events. 
+This app stores data on local database(Room database) and its data gets lost once app is uninstalled.
+This app works for all Android version from 4.1
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
